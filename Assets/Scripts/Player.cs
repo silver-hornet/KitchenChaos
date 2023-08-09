@@ -11,6 +11,35 @@ public class Player : MonoBehaviour
     bool isWalking;
     Vector3 lastInteractDir;
 
+    void Start()
+    {
+        gameInput.OnInteractAction += GameInput_OnInteractAction; // Listens to the event. Listen in Start, not Awake though.
+    }
+
+    void GameInput_OnInteractAction(object sender, System.EventArgs e)
+    {
+        Vector2 inputVector = gameInput.GetMovementVectorNormalized();
+        Vector3 moveDir = new Vector3(inputVector.x, 0f, inputVector.y);
+
+        if (moveDir != Vector3.zero)
+        {
+            lastInteractDir = moveDir; // We're using this so that the raycast still detects a collision even if the player object stopped moving after colliding with the object.
+        }
+
+        float interactDistance = 2f;
+        if (Physics.Raycast(transform.position, lastInteractDir, out RaycastHit raycastHit, interactDistance, countersLayerMask))
+        // out RaycastHit means we actually get a reference to the object the Raycast hit.
+        // using countersLayerMask ensures that we ignore any other raycast hits between the player and the counter. Another way to achieve this is using Physics.RaycastAll to
+        // get an array of all objects detected.
+        {
+            if (raycastHit.transform.TryGetComponent(out ClearCounter clearCounter)) // If true, it means the object collided with has the component ClearCounter. This is a better way of checking than using tags in Unity, since strings are error-prone and brittle.
+            {
+                // Has ClearCounter
+                clearCounter.Interact();
+            }
+        }
+    }
+
     void Update()
     {
         HandleMovement();
@@ -41,7 +70,6 @@ public class Player : MonoBehaviour
             if (raycastHit.transform.TryGetComponent(out ClearCounter clearCounter)) // If true, it means the object collided with has the component ClearCounter. This is a better way of checking than using tags in Unity, since strings are error-prone and brittle.
             {
                 // Has ClearCounter
-                clearCounter.Interact();
             }
         }
     }
