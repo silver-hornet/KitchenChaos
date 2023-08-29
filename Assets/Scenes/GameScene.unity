@@ -123,6 +123,18 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!114 &98877651 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6031506173353877488, guid: 74fb617e8ed124b1e9ef9e791f0ac9f9,
+    type: 3}
+  m_PrefabInstance: {fileID: 1887581547063263139}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c5355d802466b4272bf0a8f539eea915, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &330585543
 GameObject:
   m_ObjectHideFlags: 0
@@ -507,6 +519,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 516060713}
+--- !u!114 &495864326 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6031506173353877488, guid: 74fb617e8ed124b1e9ef9e791f0ac9f9,
+    type: 3}
+  m_PrefabInstance: {fileID: 921651485}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c5355d802466b4272bf0a8f539eea915, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &516060711
 GameObject:
   m_ObjectHideFlags: 0
@@ -720,10 +744,20 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6031506173353877488, guid: 74fb617e8ed124b1e9ef9e791f0ac9f9,
         type: 3}
+      propertyPath: testing
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6031506173353877488, guid: 74fb617e8ed124b1e9ef9e791f0ac9f9,
+        type: 3}
       propertyPath: kitchenObjectSO
       value: 
       objectReference: {fileID: 11400000, guid: 906720afac56d4e0eb2cf919df824ea3,
         type: 2}
+    - target: {fileID: 6031506173353877488, guid: 74fb617e8ed124b1e9ef9e791f0ac9f9,
+        type: 3}
+      propertyPath: secondClearCounter
+      value: 
+      objectReference: {fileID: 98877651}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1070,6 +1104,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: Clear Counter
       objectReference: {fileID: 0}
+    - target: {fileID: 6031506173353877488, guid: 74fb617e8ed124b1e9ef9e791f0ac9f9,
+        type: 3}
+      propertyPath: testing
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6031506173353877488, guid: 74fb617e8ed124b1e9ef9e791f0ac9f9,
+        type: 3}
+      propertyPath: secondClearCounter
+      value: 
+      objectReference: {fileID: 495864326}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
