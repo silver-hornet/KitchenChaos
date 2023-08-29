@@ -1,15 +1,35 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    public static Player Instance { get; private set; } // CodeMonkey rarely uses properties other than for singletons
+
+    public event EventHandler<OnSelectedCounterChangedEventArgs> OnSelectedCounterChanged;
+    public class OnSelectedCounterChangedEventArgs : EventArgs
+    {
+        public ClearCounter selectedCounter;
+    }
+
     [SerializeField] float moveSpeed = 7f;
     [SerializeField] GameInput gameInput;
     [SerializeField] LayerMask countersLayerMask;
 
     bool isWalking;
     Vector3 lastInteractDir;
+    ClearCounter selectedCounter;
+
+    void Awake()
+    {
+        if (Instance != null)
+        {
+            Debug.LogError("There is more than one Player instance");
+        }
+
+        Instance = this;
+    }
 
     void Start()
     {
@@ -18,25 +38,9 @@ public class Player : MonoBehaviour
 
     void GameInput_OnInteractAction(object sender, System.EventArgs e)
     {
-        Vector2 inputVector = gameInput.GetMovementVectorNormalized();
-        Vector3 moveDir = new Vector3(inputVector.x, 0f, inputVector.y);
-
-        if (moveDir != Vector3.zero)
+        if (selectedCounter != null)
         {
-            lastInteractDir = moveDir; // We're using this so that the raycast still detects a collision even if the player object stopped moving after colliding with the object.
-        }
-
-        float interactDistance = 2f;
-        if (Physics.Raycast(transform.position, lastInteractDir, out RaycastHit raycastHit, interactDistance, countersLayerMask))
-        // out RaycastHit means we actually get a reference to the object the Raycast hit.
-        // using countersLayerMask ensures that we ignore any other raycast hits between the player and the counter. Another way to achieve this is using Physics.RaycastAll to
-        // get an array of all objects detected.
-        {
-            if (raycastHit.transform.TryGetComponent(out ClearCounter clearCounter)) // If true, it means the object collided with has the component ClearCounter. This is a better way of checking than using tags in Unity, since strings are error-prone and brittle.
-            {
-                // Has ClearCounter
-                clearCounter.Interact();
-            }
+            selectedCounter.Interact();
         }
     }
 
@@ -63,14 +67,26 @@ public class Player : MonoBehaviour
 
         float interactDistance = 2f;
         if (Physics.Raycast(transform.position, lastInteractDir, out RaycastHit raycastHit, interactDistance, countersLayerMask))
-            // out RaycastHit means we actually get a reference to the object the Raycast hit.
-            // using countersLayerMask ensures that we ignore any other raycast hits between the player and the counter. Another way to achieve this is using Physics.RaycastAll to
-            // get an array of all objects detected.
+        // out RaycastHit means we actually get a reference to the object the Raycast hit.
+        // using countersLayerMask ensures that we ignore any other raycast hits between the player and the counter. Another way to achieve this is using Physics.RaycastAll to
+        // get an array of all objects detected.
         {
             if (raycastHit.transform.TryGetComponent(out ClearCounter clearCounter)) // If true, it means the object collided with has the component ClearCounter. This is a better way of checking than using tags in Unity, since strings are error-prone and brittle.
             {
                 // Has ClearCounter
+                if (clearCounter != selectedCounter)
+                {
+                    SetSelectedCounter(clearCounter);
+                }
             }
+            else
+            {
+                SetSelectedCounter(null);
+            }
+        }
+        else
+        {
+            SetSelectedCounter(null);
         }
     }
 
@@ -129,5 +145,11 @@ public class Player : MonoBehaviour
         isWalking = moveDir != Vector3.zero;
         float rotateSpeed = 10f;
         transform.forward = Vector3.Slerp(transform.forward, moveDir, Time.deltaTime * rotateSpeed); // Ensures the player rotates to face the correct direction. Slerp works better for rotations; Lerp works better for positions.
+    }
+
+    void SetSelectedCounter(ClearCounter selectedCounter)
+    {
+        this.selectedCounter = selectedCounter;
+        OnSelectedCounterChanged?.Invoke(this, new OnSelectedCounterChangedEventArgs { selectedCounter = selectedCounter });
     }
 }
