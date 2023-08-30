@@ -10,7 +10,7 @@ public class Player : MonoBehaviour, IKitchenObjectParent
     public event EventHandler<OnSelectedCounterChangedEventArgs> OnSelectedCounterChanged;
     public class OnSelectedCounterChangedEventArgs : EventArgs
     {
-        public ClearCounter selectedCounter;
+        public BaseCounter selectedCounter;
     }
 
     [SerializeField] float moveSpeed = 7f;
@@ -20,7 +20,7 @@ public class Player : MonoBehaviour, IKitchenObjectParent
 
     bool isWalking;
     Vector3 lastInteractDir;
-    ClearCounter selectedCounter;
+    BaseCounter selectedCounter;
     KitchenObject kitchenObject;
 
     void Awake()
@@ -73,12 +73,12 @@ public class Player : MonoBehaviour, IKitchenObjectParent
         // using countersLayerMask ensures that we ignore any other raycast hits between the player and the counter. Another way to achieve this is using Physics.RaycastAll to
         // get an array of all objects detected.
         {
-            if (raycastHit.transform.TryGetComponent(out ClearCounter clearCounter)) // If true, it means the object collided with has the component ClearCounter. This is a better way of checking than using tags in Unity, since strings are error-prone and brittle.
+            if (raycastHit.transform.TryGetComponent(out BaseCounter baseCounter)) // If true, it means the object collided with has the component ClearCounter. This is a better way of checking than using tags in Unity, since strings are error-prone and brittle.
             {
                 // Has ClearCounter
-                if (clearCounter != selectedCounter)
+                if (baseCounter != selectedCounter)
                 {
-                    SetSelectedCounter(clearCounter);
+                    SetSelectedCounter(baseCounter);
                 }
             }
             else
@@ -149,7 +149,7 @@ public class Player : MonoBehaviour, IKitchenObjectParent
         transform.forward = Vector3.Slerp(transform.forward, moveDir, Time.deltaTime * rotateSpeed); // Ensures the player rotates to face the correct direction. Slerp works better for rotations; Lerp works better for positions.
     }
 
-    void SetSelectedCounter(ClearCounter selectedCounter)
+    void SetSelectedCounter(BaseCounter selectedCounter)
     {
         this.selectedCounter = selectedCounter;
         OnSelectedCounterChanged?.Invoke(this, new OnSelectedCounterChangedEventArgs { selectedCounter = selectedCounter });
