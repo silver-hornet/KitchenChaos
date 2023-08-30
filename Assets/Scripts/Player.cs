@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Player : MonoBehaviour
+public class Player : MonoBehaviour, IKitchenObjectParent
 {
     public static Player Instance { get; private set; } // CodeMonkey rarely uses properties other than for singletons
 
@@ -16,10 +16,12 @@ public class Player : MonoBehaviour
     [SerializeField] float moveSpeed = 7f;
     [SerializeField] GameInput gameInput;
     [SerializeField] LayerMask countersLayerMask;
+    [SerializeField] Transform kitchenObjectHoldPoint;
 
     bool isWalking;
     Vector3 lastInteractDir;
     ClearCounter selectedCounter;
+    KitchenObject kitchenObject;
 
     void Awake()
     {
@@ -40,7 +42,7 @@ public class Player : MonoBehaviour
     {
         if (selectedCounter != null)
         {
-            selectedCounter.Interact();
+            selectedCounter.Interact(this);
         }
     }
 
@@ -151,5 +153,30 @@ public class Player : MonoBehaviour
     {
         this.selectedCounter = selectedCounter;
         OnSelectedCounterChanged?.Invoke(this, new OnSelectedCounterChangedEventArgs { selectedCounter = selectedCounter });
+    }
+
+    public Transform GetKitchenObjectFollowTransform()
+    {
+        return kitchenObjectHoldPoint;
+    }
+
+    public void SetKitchenObject(KitchenObject kitchenObject)
+    {
+        this.kitchenObject = kitchenObject;
+    }
+
+    public KitchenObject GetKitchenObject()
+    {
+        return kitchenObject;
+    }
+
+    public void ClearKitchenObject()
+    {
+        kitchenObject = null;
+    }
+
+    public bool HasKitchenObject()
+    {
+        return kitchenObject != null;
     }
 }
