@@ -15,7 +15,8 @@ public class BaseCounter : MonoBehaviour, IKitchenObjectParent
 
     public virtual void InteractAlternate(Player player)
     {
-        Debug.LogError("BaseCounter.InteractAlternate()"); // Adding this here since this method should never be triggered anyway
+        //Debug.LogError("BaseCounter.InteractAlternate()"); // Adding this here since this method should never be triggered anyway
+        // Commented this out for now so the error is not fired in the Debug Log when the player tries using the F key on the Trash or Stove
     }
 
     public Transform GetKitchenObjectFollowTransform()
