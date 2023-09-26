@@ -4,29 +4,52 @@ using UnityEngine;
 
 public class StoveCounter : BaseCounter
 {
+    enum State // A basic state machine
+    {
+        Idle,
+        Frying,
+        Fried,
+        Burned,
+    }
+
     [SerializeField] FryingRecipeSO[] fryingRecipeSOArray;
 
+    State state;
     float fryingTimer;
     FryingRecipeSO fryingRecipeSO;
+
+    void Start()
+    {
+        state = State.Idle;
+    }
 
     void Update()
     {
         if (HasKitchenObject()) // CodeMonkey prefers implementing a timer this way, instead of a Coroutine. He said it's not for any performance reasons. He just doesn't like the patterns a Coroutine forces on him.
         {
-            fryingTimer += Time.deltaTime;
-
-            if (fryingTimer > fryingRecipeSO.fryingTimerMax)
+            switch (state)
             {
-                // Fried
-                fryingTimer = 0f;
-                Debug.Log("Fried!");
-                GetKitchenObject().DestroySelf();
-                KitchenObject.SpawnKitchenObject(fryingRecipeSO.output, this);
+                case State.Idle:
+                    break;
+                case State.Frying:
+                    fryingTimer += Time.deltaTime;
+                    if (fryingTimer > fryingRecipeSO.fryingTimerMax)
+                    {
+                        // Fried
+                        GetKitchenObject().DestroySelf();
+                        KitchenObject.SpawnKitchenObject(fryingRecipeSO.output, this);
+                        Debug.Log("Object fried!");
+                        state = State.Fried;
+                    }
+                    break;
+                case State.Fried:
+                    break;
+                case State.Burned:
+                    break;
             }
-            Debug.Log(fryingTimer);
+            Debug.Log(state);
         }
     }
-
 
     public override void Interact(Player player)
     {
@@ -41,6 +64,8 @@ public class StoveCounter : BaseCounter
                     // Player carring something that can be Fried
                     player.GetKitchenObject().SetKitchenObjectParent(this);
                     fryingRecipeSO = GetFryingRecipeSOWithInput(GetKitchenObject().GetKitchenObjectSO());
+                    state = State.Frying;
+                    fryingTimer = 0f;
                 }
             }
             else
