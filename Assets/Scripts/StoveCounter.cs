@@ -13,10 +13,13 @@ public class StoveCounter : BaseCounter
     }
 
     [SerializeField] FryingRecipeSO[] fryingRecipeSOArray;
+    [SerializeField] BurningRecipeSO[] burningRecipeSOArray;
 
     State state;
     float fryingTimer;
     FryingRecipeSO fryingRecipeSO;
+    float burningTimer;
+    BurningRecipeSO burningRecipeSO;
 
     void Start()
     {
@@ -40,9 +43,20 @@ public class StoveCounter : BaseCounter
                         KitchenObject.SpawnKitchenObject(fryingRecipeSO.output, this);
                         Debug.Log("Object fried!");
                         state = State.Fried;
+                        burningTimer = 0f;
+                        burningRecipeSO = GetBurningRecipeSOWithInput(GetKitchenObject().GetKitchenObjectSO());
                     }
                     break;
                 case State.Fried:
+                    burningTimer += Time.deltaTime;
+                    if (burningTimer > burningRecipeSO.burningTimerMax)
+                    {
+                        // Fried
+                        GetKitchenObject().DestroySelf();
+                        KitchenObject.SpawnKitchenObject(burningRecipeSO.output, this);
+                        Debug.Log("Object burned!");
+                        state = State.Burned;
+                    }
                     break;
                 case State.Burned:
                     break;
@@ -115,6 +129,18 @@ public class StoveCounter : BaseCounter
             if (fryingRecipeSO.input == inputKitchenObjectSO)
             {
                 return fryingRecipeSO;
+            }
+        }
+        return null;
+    }
+
+    BurningRecipeSO GetBurningRecipeSOWithInput(KitchenObjectSO inputKitchenObjectSO)
+    {
+        foreach (BurningRecipeSO burningRecipeSO in burningRecipeSOArray)
+        {
+            if (burningRecipeSO.input == inputKitchenObjectSO)
+            {
+                return burningRecipeSO;
             }
         }
         return null;
