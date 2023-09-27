@@ -47,7 +47,7 @@ public class KitchenObject : MonoBehaviour
     {
         if (this is PlateKitchenObject)
         {
-            plateKitchenObject = this as PlateKitchenObject;
+            plateKitchenObject = this as PlateKitchenObject; // You can cast to any type, like (int)variable but you can only use 'as' for reference types, like Classes.
             return true;
         }
         else
