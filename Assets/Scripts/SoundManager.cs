@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class SoundManager : MonoBehaviour
 {
+    const string PLAYER_PREFS_SOUND_EFFECTS_VOLUME = "SoundEffectsVolume";
+
     public static SoundManager Instance { get; private set; }
 
     [SerializeField] AudioClipRefsSO audioClipRefsSO;
@@ -13,6 +15,8 @@ public class SoundManager : MonoBehaviour
     void Awake()
     {
         Instance = this;
+
+        volume = PlayerPrefs.GetFloat(PLAYER_PREFS_SOUND_EFFECTS_VOLUME, 1f); // The 1f is the default value if PLAYER_PREFS_SOUND_EFFECTS_VOLUME is null
     }
 
     void Start()
@@ -82,6 +86,9 @@ public class SoundManager : MonoBehaviour
         {
             volume = 0f;
         }
+
+        PlayerPrefs.SetFloat(PLAYER_PREFS_SOUND_EFFECTS_VOLUME, volume);
+        PlayerPrefs.Save(); // Not strictly neccessary, but adding just in case the game crashes while the player is changing the volume settings
     }
 
     public float GetVolume()

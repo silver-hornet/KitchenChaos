@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class MusicManager : MonoBehaviour
 {
+    const string PLAYER_PREFS_MUSIC_VOLUME = "MusicVolume";
+
     public static MusicManager Instance { get; private set; }
 
     AudioSource audioSource;
@@ -13,6 +15,8 @@ public class MusicManager : MonoBehaviour
     {
         Instance = this;
         audioSource = GetComponent<AudioSource>();
+        volume = PlayerPrefs.GetFloat(PLAYER_PREFS_MUSIC_VOLUME, 0.3f); // The 0.3f is the default value if PLAYER_PREFS_MUSIC_VOLUME is null
+        audioSource.volume = volume; // Adding this since the music starts playing straight away
     }
 
     public void ChangeVolume()
@@ -23,6 +27,9 @@ public class MusicManager : MonoBehaviour
             volume = 0f;
         }
         audioSource.volume = volume;
+
+        PlayerPrefs.SetFloat(PLAYER_PREFS_MUSIC_VOLUME, volume);
+        PlayerPrefs.Save(); // Not strictly neccessary, but adding just in case the game crashes while the player is changing the volume settings
     }
 
     public float GetVolume()
