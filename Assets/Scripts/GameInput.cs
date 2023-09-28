@@ -7,6 +7,8 @@ using UnityEngine.InputSystem;
 
 public class GameInput : MonoBehaviour
 {
+    const string PLAYER_PREFS_BINDINGS = "InputBindings";
+
     public static GameInput Instance { get; private set; }
 
     public event EventHandler OnInteractAction;
@@ -34,6 +36,11 @@ public class GameInput : MonoBehaviour
         // Usually, all game objects are automatically destroyed when a scene changes, except for the PlayerInputActions object.
         // This can sometimes cause a MissingReferenceException error. As a result, some logic from the previous game might affect the logic of the next game.
         // So we'll use an OnDestroy function to destroy this instance of the game object and unsubscribe from all the events.
+
+        if (PlayerPrefs.HasKey(PLAYER_PREFS_BINDINGS))
+        {
+            playerInputActions.LoadBindingOverridesFromJson(PlayerPrefs.GetString(PLAYER_PREFS_BINDINGS));
+        }
 
         playerInputActions.Player.Enable();
 
@@ -143,6 +150,9 @@ public class GameInput : MonoBehaviour
             callback.Dispose();
             playerInputActions.Player.Enable();
             onActionRebound();
+
+            PlayerPrefs.SetString(PLAYER_PREFS_BINDINGS, playerInputActions.SaveBindingOverridesAsJson());
+            PlayerPrefs.Save();
         }).Start();
     }
 }
