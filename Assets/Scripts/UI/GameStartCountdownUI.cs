@@ -9,11 +9,11 @@ public class GameStartCountdownUI : MonoBehaviour
 
     void Start()
     {
-        KitchenGameManager.Instance.OnStateChanged += Instance_OnStateChanged;
+        KitchenGameManager.Instance.OnStateChanged += KitchenManager_OnStateChanged;
         Hide();
     }
 
-    private void Instance_OnStateChanged(object sender, System.EventArgs e)
+    private void KitchenManager_OnStateChanged(object sender, System.EventArgs e)
     {
         if (KitchenGameManager.Instance.IsCountdownToStartActive())
         {
