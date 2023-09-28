@@ -7,6 +7,11 @@ public class CuttingCounter : BaseCounter, IHasProgress
 {
     public static event EventHandler OnAnyCut;
 
+    new public static void ResetStaticData() // When a scene resets, static events are still listening, so it's important to clear all listeners. Added new to not override the same function on BaseCounter.
+    {
+        OnAnyCut = null;
+    }
+
     public event EventHandler<IHasProgress.OnProgressChangedEventArgs> OnProgressChanged;
     public event EventHandler OnCut;
 

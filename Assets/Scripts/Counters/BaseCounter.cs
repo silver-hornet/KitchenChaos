@@ -7,6 +7,11 @@ public class BaseCounter : MonoBehaviour, IKitchenObjectParent
 {
     public static event EventHandler OnAnyObjectPlacedHere;
 
+    public static void ResetStaticData() // When a scene resets, static events are still listening, so it's important to clear all listeners
+    {
+        OnAnyObjectPlacedHere = null;
+    }
+
     [SerializeField] Transform counterTopPoint;
 
     KitchenObject kitchenObject;

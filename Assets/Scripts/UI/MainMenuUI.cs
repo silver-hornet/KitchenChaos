@@ -20,5 +20,7 @@ public class MainMenuUI : MonoBehaviour
         {
             Application.Quit();
         });
+
+        Time.timeScale = 1f; // To ensure that everything is unpaused again if the player paused the game, returned to the main menu, then tried playing again
     }
 }
