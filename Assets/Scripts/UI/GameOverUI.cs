@@ -19,6 +19,7 @@ public class GameOverUI : MonoBehaviour
         {
             Show();
             recipesDeliveredText.text = DeliveryManager.Instance.GetSuccessfulRecipesAmount().ToString();
+            StartCoroutine(RestartGame()); // This was not in the course, but I added a quick way for the game to automatically restart after game over (since this was missed in the course).
         }
         else
         {
@@ -34,5 +35,11 @@ public class GameOverUI : MonoBehaviour
     void Hide()
     {
         gameObject.SetActive(false);
+    }
+
+    IEnumerator RestartGame()
+    {
+        yield return new WaitForSeconds(4f);
+        Loader.Load(Loader.Scene.MainMenuScene);
     }
 }
