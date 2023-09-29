@@ -22,7 +22,7 @@ public class KitchenGameManager : MonoBehaviour
     State state;
     float countdownToStartTimer = 3f;
     float gamePlayingTimer;
-    float gamePlayingTimerMax = 10f;
+    float gamePlayingTimerMax = 20f;
     bool isGamePaused = false;
 
     void Awake()
